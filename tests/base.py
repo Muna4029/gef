@@ -5,7 +5,6 @@ import re
 import subprocess
 import tempfile
 import time
-from typing import Tuple
 import unittest
 
 import rpyc
@@ -50,7 +49,7 @@ class RemoteGefUnitTestGeneric(unittest.TestCase):
 
     def __setup(self):
         if not hasattr(self, "_target"):
-            setattr(self, "_target", debug_target("default"))
+            self._target = debug_target("default")
         else:
             assert isinstance(self._target, pathlib.Path)  # type: ignore pylint: disable=E1101
             assert self._target.exists()  # type: ignore pylint: disable=E1101
@@ -109,7 +108,7 @@ pi start_rpyc_service({self._port})
         return super().tearDown()
 
     @property
-    def gdb_version(self) -> Tuple[int, int]:
+    def gdb_version(self) -> tuple[int, int]:
         res = [int(d) for d in re.search(r"(\d+)\D(\d+)", self._gdb.VERSION).groups()] 
         assert len(res) >= 2
-        return res
+        return tuple(res)
